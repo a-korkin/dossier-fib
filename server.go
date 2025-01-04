@@ -8,11 +8,8 @@ import (
 func main() {
 	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello from fiber!")
-	})
-
 	app.Get("/persons", persons.GetAll)
+	app.Get("/persons/:id", persons.GetByID)
 
 	app.Listen(":8000")
 }
