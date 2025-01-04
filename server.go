@@ -1,16 +1,9 @@
 package main
 
 import (
+	"github.com/a-korkin/dossier/internal/handlers"
 	"github.com/gofiber/fiber/v2"
 )
-
-type Person struct {
-	ID         int    `json:"id"`
-	LastName   string `json:"last_name"`
-	FirstName  string `json:"first_name"`
-	MiddleName string `json:"middle_name"`
-	Age        uint8  `json:"age"`
-}
 
 func main() {
 	app := fiber.New()
@@ -19,16 +12,7 @@ func main() {
 		return c.SendString("Hello from fiber!")
 	})
 
-	app.Get("/persons", func(c *fiber.Ctx) error {
-		person := &Person{
-			ID:         1,
-			LastName:   "Bickle",
-			FirstName:  "Travis",
-			MiddleName: "Ivanovich",
-			Age:        37,
-		}
-		return c.JSON(person)
-	})
+	app.Get("/persons", persons.GetAll)
 
 	app.Listen(":8000")
 }
