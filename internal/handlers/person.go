@@ -3,12 +3,12 @@ package persons
 import (
 	"fmt"
 
-	"github.com/a-korkin/dossier/internal/adapters/db"
+	"github.com/a-korkin/dossier/internal/ports"
 	"github.com/gofiber/fiber/v2"
 )
 
-func getRepo(c *fiber.Ctx) (*db.PersonRepo, error) {
-	personRepo, ok := c.Locals("personRepo").(*db.PersonRepo)
+func getRepo(c *fiber.Ctx) (ports.Repo, error) {
+	personRepo, ok := c.Locals("personRepo").(ports.Repo)
 	if !ok {
 		return nil, fmt.Errorf("failed to get person repo")
 	}
