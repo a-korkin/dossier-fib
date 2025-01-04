@@ -1,6 +1,7 @@
 package persons
 
 import (
+	// "github.com/a-korkin/dossier/internal/adapters/db"
 	"github.com/a-korkin/dossier/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"log"
@@ -24,6 +25,12 @@ var persons = []models.Person{
 }
 
 func GetAll(c *fiber.Ctx) error {
+	// personRepo := db.PersonRepo{}
+	// repo, _ := c.Locals(personRepo).(db.PersonRepo)
+	// return c.JSON(repo.GetAll())
+	// if ok {
+	// 	log.Printf("repo: %v", repo)
+	// }
 	return c.JSON(&persons)
 }
 
