@@ -1,42 +1,41 @@
 package persons
 
 import (
-	// "github.com/a-korkin/dossier/internal/adapters/db"
-	"github.com/a-korkin/dossier/internal/models"
+	"fmt"
+
+	"github.com/a-korkin/dossier/internal/adapters/db"
 	"github.com/gofiber/fiber/v2"
-	"log"
 )
 
-var persons = []models.Person{
-	{
-		ID:         1,
-		LastName:   "Ivanov",
-		FirstName:  "Ivan",
-		MiddleName: "Ivanovich",
-		Age:        35,
-	},
-	{
-		ID:         2,
-		LastName:   "Petrov",
-		FirstName:  "Petr",
-		MiddleName: "Petrovich",
-		Age:        23,
-	},
+func getRepo(c *fiber.Ctx) (*db.PersonRepo, error) {
+	personRepo, ok := c.Locals("personRepo").(*db.PersonRepo)
+	if !ok {
+		return nil, fmt.Errorf("failed to get person repo")
+	}
+	return personRepo, nil
 }
 
 func GetAll(c *fiber.Ctx) error {
-	// personRepo := db.PersonRepo{}
-	// repo, _ := c.Locals(personRepo).(db.PersonRepo)
-	// return c.JSON(repo.GetAll())
-	// if ok {
-	// 	log.Printf("repo: %v", repo)
-	// }
-	return c.JSON(&persons)
+	repo, err := getRepo(c)
+	if err != nil {
+		return err
+	}
+	return c.JSON(repo.GetAll())
 }
 
 func GetByID(c *fiber.Ctx) error {
-	id := c.Params("id")
-	log.Printf("id: %s", id)
-
-	return c.JSON(&persons[0])
+	id, err := c.ParamsInt("id")
+	if err != nil {
+		return err
+	}
+	repo, err := getRepo(c)
+	if err != nil {
+		return err
+	}
+	person := repo.GetByID(uint32(id))
+	if person == nil {
+		c.Status(fiber.StatusNotFound)
+		return nil
+	}
+	return c.JSON(person)
 }

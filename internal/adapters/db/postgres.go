@@ -83,6 +83,8 @@ where id = $1`
 			log.Fatal(err)
 			return nil
 		}
+	} else {
+		return nil
 	}
 	return &person
 }
