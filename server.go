@@ -28,6 +28,8 @@ func main() {
 		return c.Next()
 	})
 
+	app.Post("/persons", persons.Add)
+	app.Put("/persons/:id", persons.Update)
 	app.Get("/persons", persons.GetAll)
 	app.Get("/persons/:id", persons.GetByID)
 
