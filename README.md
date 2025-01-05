@@ -25,4 +25,6 @@ Content-Type: application/json
     "middle_name": "UnknownUpd",
     "age": 24
 }
+
+DELETE localhost:8000/persons/1
 ```

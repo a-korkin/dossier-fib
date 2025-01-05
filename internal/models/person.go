@@ -8,7 +8,7 @@ type Person struct {
 	Age        uint8  `json:"age"`
 }
 
-type PersonDto struct {
+type PersonDTO struct {
 	LastName   string `json:"last_name"`
 	FirstName  string `json:"first_name"`
 	MiddleName string `json:"middle_name"`

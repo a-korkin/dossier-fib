@@ -21,7 +21,7 @@ func Add(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	in := models.PersonDto{}
+	in := models.PersonDTO{}
 	if err = c.BodyParser(&in); err != nil {
 		return err
 	}
@@ -33,7 +33,7 @@ func Update(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	in := models.PersonDto{}
+	in := models.PersonDTO{}
 	if err = c.BodyParser(&in); err != nil {
 		return err
 	}

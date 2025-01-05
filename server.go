@@ -3,7 +3,8 @@ package main
 import (
 	"github.com/a-korkin/dossier/configs"
 	"github.com/a-korkin/dossier/internal/adapters/db"
-	"github.com/a-korkin/dossier/internal/handlers"
+	"github.com/a-korkin/dossier/internal/handlers/payments"
+	"github.com/a-korkin/dossier/internal/handlers/persons"
 	"github.com/gofiber/fiber/v2"
 	"log"
 )
@@ -23,8 +24,11 @@ func main() {
 	app := fiber.New()
 
 	personRepo := db.NewPersonRepo(pg)
+	paymentRepo := db.NewPaymentRepo(pg)
+
 	app.Use(func(c *fiber.Ctx) error {
 		c.Locals("personRepo", personRepo)
+		c.Locals("paymentRepo", paymentRepo)
 		return c.Next()
 	})
 
@@ -33,6 +37,8 @@ func main() {
 	app.Get("/persons", persons.GetAll)
 	app.Get("/persons/:id", persons.GetByID)
 	app.Delete("/persons/:id", persons.Delete)
+
+	app.Post("/payments/:person_id", payments.Add)
 
 	if err = app.Listen(":8000"); err != nil {
 		log.Fatal(err)

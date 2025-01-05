@@ -40,7 +40,7 @@ func NewPersonRepo(db *PostgresDB) *PersonRepo {
 	}
 }
 
-func (repo *PersonRepo) Add(in *models.PersonDto) *models.Person {
+func (repo *PersonRepo) Add(in *models.PersonDTO) *models.Person {
 	sql := `
 insert into public.persons(last_name, first_name, middle_name, age)
 values($1, $2, $3, $4)
@@ -71,7 +71,7 @@ returning id;`
 	return &out
 }
 
-func (repo *PersonRepo) Update(id uint32, in *models.PersonDto) *models.Person {
+func (repo *PersonRepo) Update(id uint32, in *models.PersonDTO) *models.Person {
 	sql := `
 update public.persons
 set last_name = $2,
@@ -157,5 +157,38 @@ where id = $1`
 	_, err := repo.DB.DB.Exec(sql, id)
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+type PaymentRepo struct {
+	DB *PostgresDB
+}
+
+func NewPaymentRepo(db *PostgresDB) *PaymentRepo {
+	return &PaymentRepo{
+		DB: db,
+	}
+}
+
+func (repo *PaymentRepo) Add(personID uint32, in *models.PaymentDTO) *models.Payment {
+	sql := `
+insert into public.payments(person_id, sum)
+values($1, $2)
+returning id, person_id, sum, created;`
+	row, err := repo.DB.DB.Query(sql, personID, in.Sum)
+	if err != nil {
+		log.Fatal(err)
+		return nil
+	}
+	if row.Next() {
+		out := models.Payment{}
+		err = row.Scan(&out.ID, &out.PersonID, &out.Sum, &out.Created)
+		if err != nil {
+			log.Fatal(err)
+			return nil
+		}
+		return &out
+	} else {
+		return nil
 	}
 }
