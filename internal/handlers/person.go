@@ -68,3 +68,17 @@ func GetByID(c *fiber.Ctx) error {
 	}
 	return c.JSON(person)
 }
+
+func Delete(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+	if err != nil {
+		return err
+	}
+	repo, err := getRepo(c)
+	if err != nil {
+		return err
+	}
+	repo.Delete(uint32(id))
+	c.Status(fiber.StatusNoContent)
+	return nil
+}

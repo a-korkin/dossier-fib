@@ -32,6 +32,7 @@ func main() {
 	app.Put("/persons/:id", persons.Update)
 	app.Get("/persons", persons.GetAll)
 	app.Get("/persons/:id", persons.GetByID)
+	app.Delete("/persons/:id", persons.Delete)
 
 	if err = app.Listen(":8000"); err != nil {
 		log.Fatal(err)

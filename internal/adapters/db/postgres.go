@@ -149,3 +149,13 @@ where id = $1`
 	}
 	return &person
 }
+
+func (repo *PersonRepo) Delete(id uint32) {
+	sql := `
+delete from public.persons
+where id = $1`
+	_, err := repo.DB.DB.Exec(sql, id)
+	if err != nil {
+		log.Fatal(err)
+	}
+}

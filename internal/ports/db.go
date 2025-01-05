@@ -7,4 +7,5 @@ type Repo interface {
 	Update(uint32, *models.PersonDto) *models.Person
 	GetAll() []*models.Person
 	GetByID(id uint32) *models.Person
+	Delete(uint32)
 }
