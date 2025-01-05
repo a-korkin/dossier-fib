@@ -27,4 +27,11 @@ Content-Type: application/json
 }
 
 DELETE localhost:8000/persons/1
+
+POST localhost:8000/payments/1
+Content-Type: application/json
+
+{
+    "sum": 43.03
+}
 ```
