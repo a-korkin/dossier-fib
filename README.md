@@ -7,6 +7,7 @@ GET localhost:8000/persons
 GET localhost:8000/persons/1
 
 POST localhost:8000/persons
+Content-Type: application/json
 
 {
     "last_name": "Bickle",
@@ -16,6 +17,7 @@ POST localhost:8000/persons
 }
 
 PUT localhost:8000/persons/1
+Content-Type: application/json
 
 {
     "last_name": "BickleUpd",
