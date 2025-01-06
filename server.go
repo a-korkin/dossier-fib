@@ -39,6 +39,7 @@ func main() {
 	app.Delete("/persons/:id", persons.Delete)
 
 	app.Post("/payments/:person_id", payments.Add)
+	app.Get("/payments/:person_id", payments.GetByPerson)
 
 	if err = app.Listen(":8000"); err != nil {
 		log.Fatal(err)

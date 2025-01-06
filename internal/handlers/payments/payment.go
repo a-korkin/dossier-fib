@@ -31,3 +31,15 @@ func Add(c *fiber.Ctx) error {
 	}
 	return c.JSON(repo.Add(uint32(personID), &in))
 }
+
+func GetByPerson(c *fiber.Ctx) error {
+	repo, err := getRepo(c)
+	if err != nil {
+		return err
+	}
+	personID, err := c.ParamsInt("person_id")
+	if err != nil {
+		return err
+	}
+	return c.JSON(repo.GetByPerson(uint32(personID)))
+}

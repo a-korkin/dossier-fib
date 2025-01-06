@@ -37,3 +37,27 @@ returning id, person_id, sum, created;`
 		return nil
 	}
 }
+
+func (repo *PaymentRepo) GetByPerson(personID uint32) []*models.Payment {
+	sql := `
+select id, person_id, sum, created 
+from public.payments
+where person_id = $1`
+	rows, err := repo.DB.DB.Query(sql, personID)
+	if err != nil {
+		log.Fatal(err)
+		return nil
+	}
+	payments := make([]*models.Payment, 0)
+	for rows.Next() {
+		payment := models.Payment{}
+		err = rows.Scan(&payment.ID, &payment.PersonID,
+			&payment.Sum, &payment.Created)
+		if err != nil {
+			log.Fatal(err)
+			return nil
+		}
+		payments = append(payments, &payment)
+	}
+	return payments
+}

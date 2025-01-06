@@ -12,4 +12,5 @@ type Repo interface {
 
 type PaymentRepo interface {
 	Add(uint32, *models.PaymentDTO) *models.Payment
+	GetByPerson(uint32) []*models.Payment
 }
