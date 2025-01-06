@@ -9,7 +9,7 @@ var Db *sql.DB
 
 func OpenDB(driver, conn string) error {
 	var err error
-	Db, err = sql.Open("postgres", conn)
+	Db, err = sql.Open(driver, conn)
 	return err
 }
 

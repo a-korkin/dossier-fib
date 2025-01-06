@@ -11,7 +11,8 @@ import (
 
 func main() {
 	dbConn := configs.GetEnv("GOOSE_DBSTRING")
-	err := db.OpenDB("postgres", dbConn)
+	driver := configs.GetEnv("GOOSE_DRIVER")
+	err := db.OpenDB(driver, dbConn)
 	if err != nil {
 		log.Fatal(err)
 	}
