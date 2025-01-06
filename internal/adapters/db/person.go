@@ -21,7 +21,6 @@ func (repo *PersonRepo) Add(in *models.PersonDTO) *models.Person {
 insert into public.persons(last_name, first_name, middle_name, age)
 values($1, $2, $3, $4)
 returning id;`
-
 	row, err := repo.DB.Query(
 		sql, in.LastName, in.FirstName, in.MiddleName, in.Age)
 	if err != nil {
@@ -101,6 +100,30 @@ from public.persons;`
 	return persons
 }
 
+func (repo *PersonRepo) getPayments(personID uint32) []*models.Payment {
+	sql := `
+select id, person_id, sum, created
+from public.payments
+where person_id = $1`
+	rows, err := repo.DB.Query(sql, personID)
+	if err != nil {
+		log.Fatal(err)
+		return nil
+	}
+	payments := make([]*models.Payment, 0)
+	for rows.Next() {
+		payment := models.Payment{}
+		err = rows.Scan(&payment.ID, &payment.PersonID,
+			&payment.Sum, &payment.Created)
+		if err != nil {
+			log.Fatal(err)
+			return nil
+		}
+		payments = append(payments, &payment)
+	}
+	return payments
+}
+
 func (repo *PersonRepo) GetByID(id uint32) *models.Person {
 	sql := `
 select id, last_name, first_name, middle_name, age
@@ -120,6 +143,7 @@ where id = $1`
 			log.Fatal(err)
 			return nil
 		}
+		person.Payments = repo.getPayments(id)
 	} else {
 		return nil
 	}
