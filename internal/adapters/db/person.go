@@ -1,15 +1,16 @@
 package db
 
 import (
+	"database/sql"
 	"github.com/a-korkin/dossier/internal/models"
 	"log"
 )
 
 type PersonRepo struct {
-	DB *PostgresDB
+	DB *sql.DB
 }
 
-func NewPersonRepo(db *PostgresDB) *PersonRepo {
+func NewPersonRepo(db *sql.DB) *PersonRepo {
 	return &PersonRepo{
 		DB: db,
 	}
@@ -21,7 +22,7 @@ insert into public.persons(last_name, first_name, middle_name, age)
 values($1, $2, $3, $4)
 returning id;`
 
-	row, err := repo.DB.DB.Query(
+	row, err := repo.DB.Query(
 		sql, in.LastName, in.FirstName, in.MiddleName, in.Age)
 	if err != nil {
 		log.Fatal(err)
@@ -55,7 +56,7 @@ set last_name = $2,
 	age = $5
 where id = $1
 returning id, last_name, first_name, middle_name, age;`
-	row, err := repo.DB.DB.Query(
+	row, err := repo.DB.Query(
 		sql, id, in.LastName, in.FirstName, in.MiddleName, in.Age)
 	if err != nil {
 		log.Fatal(err)
@@ -80,7 +81,7 @@ func (repo *PersonRepo) GetAll() []*models.Person {
 	sql := `
 select id, last_name, first_name, middle_name, age 
 from public.persons;`
-	rows, err := repo.DB.DB.Query(sql)
+	rows, err := repo.DB.Query(sql)
 	if err != nil {
 		log.Fatal(err)
 		return nil
@@ -105,7 +106,7 @@ func (repo *PersonRepo) GetByID(id uint32) *models.Person {
 select id, last_name, first_name, middle_name, age
 from public.persons
 where id = $1`
-	row, err := repo.DB.DB.Query(sql, id)
+	row, err := repo.DB.Query(sql, id)
 	if err != nil {
 		log.Fatal(err)
 		return nil
@@ -129,7 +130,7 @@ func (repo *PersonRepo) Delete(id uint32) {
 	sql := `
 delete from public.persons
 where id = $1`
-	_, err := repo.DB.DB.Exec(sql, id)
+	_, err := repo.DB.Exec(sql, id)
 	if err != nil {
 		log.Fatal(err)
 	}

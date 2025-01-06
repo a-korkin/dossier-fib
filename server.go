@@ -11,20 +11,20 @@ import (
 
 func main() {
 	dbConn := configs.GetEnv("GOOSE_DBSTRING")
-	pg, err := db.NewPostgresDB(dbConn)
+	err := db.OpenDB("postgres", dbConn)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer func() {
-		if err = pg.Close(); err != nil {
+		if err = db.Db.Close(); err != nil {
 			log.Fatal(err)
 		}
 	}()
 
 	app := fiber.New()
 
-	personRepo := db.NewPersonRepo(pg)
-	paymentRepo := db.NewPaymentRepo(pg)
+	personRepo := db.NewPersonRepo(db.Db)
+	paymentRepo := db.NewPaymentRepo(db.Db)
 
 	app.Use(func(c *fiber.Ctx) error {
 		c.Locals("personRepo", personRepo)

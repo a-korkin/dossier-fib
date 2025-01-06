@@ -5,25 +5,14 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type PostgresDB struct {
-	DB *sql.DB
+var Db *sql.DB
+
+func OpenDB(driver, conn string) error {
+	var err error
+	Db, err = sql.Open("postgres", conn)
+	return err
 }
 
-func NewPostgresDB(conn string) (*PostgresDB, error) {
-	db, err := sql.Open("postgres", conn)
-	if err != nil {
-		return nil, err
-	}
-	pg := PostgresDB{
-		DB: db,
-	}
-
-	return &pg, nil
-}
-
-func (pg *PostgresDB) Close() error {
-	if err := pg.DB.Close(); err != nil {
-		return err
-	}
-	return nil
+func CloseDB() error {
+	return Db.Close()
 }

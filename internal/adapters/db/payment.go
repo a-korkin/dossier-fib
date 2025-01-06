@@ -1,15 +1,16 @@
 package db
 
 import (
+	"database/sql"
 	"github.com/a-korkin/dossier/internal/models"
 	"log"
 )
 
 type PaymentRepo struct {
-	DB *PostgresDB
+	DB *sql.DB
 }
 
-func NewPaymentRepo(db *PostgresDB) *PaymentRepo {
+func NewPaymentRepo(db *sql.DB) *PaymentRepo {
 	return &PaymentRepo{
 		DB: db,
 	}
@@ -20,7 +21,7 @@ func (repo *PaymentRepo) Add(personID uint32, in *models.PaymentDTO) *models.Pay
 insert into public.payments(person_id, sum)
 values($1, $2)
 returning id, person_id, sum, created;`
-	row, err := repo.DB.DB.Query(sql, personID, in.Sum)
+	row, err := repo.DB.Query(sql, personID, in.Sum)
 	if err != nil {
 		log.Fatal(err)
 		return nil
@@ -43,7 +44,7 @@ func (repo *PaymentRepo) GetByPerson(personID uint32) []*models.Payment {
 select id, person_id, sum, created 
 from public.payments
 where person_id = $1`
-	rows, err := repo.DB.DB.Query(sql, personID)
+	rows, err := repo.DB.Query(sql, personID)
 	if err != nil {
 		log.Fatal(err)
 		return nil
